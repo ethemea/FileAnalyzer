@@ -8,34 +8,58 @@ import java.util.regex.Pattern;
 public class Analyzer {
  
     public static void main(String[] args) throws IOException { 
-        String filePath = "1.txt"; // TODO получение списка txt из args[]
-        boolean shortStat = true;
-        boolean fullStat = true;
+        boolean shortStat = false;
+        boolean fullStat = false;
+        boolean addData = false;
         ArrayList<String> array = new ArrayList<String>();
-        Scanner sc = new Scanner(new FileReader(filePath)).useDelimiter("\n"); // TODO перенос в класс Sorter
-        String str;
-      
-        while (sc.hasNext()) { // TODO перенос в класс Sorter
-            str = sc.next();
-            String regex = "[\\p{C}]"; // removing invisible characters
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(str);
-            String cleanStr = matcher.replaceAll("");
-            array.add(cleanStr);
+
+        ArrayList<String> files = new ArrayList<String>();
+        for (String each : args) {
+            if (each.endsWith(".txt")) {
+                File f = new File(each);
+                if(f.exists() && !f.isDirectory()) { 
+                    files.add(each);
+                }
+            } else switch (each) {
+                case "-s":
+                    shortStat = true;
+                    break;
+                case "-f":
+                    fullStat = true;
+                    break;
+                case "-a":
+                    addData = true;
+                default:
+                    break;
+            }
         }
-        if (sc != null) {
-            sc.close();
+        
+        for (String filePath : files) {
+            Scanner sc = new Scanner(new FileReader(filePath)).useDelimiter("\n"); // перенос в класс Sorter ??
+            String str;
+            while (sc.hasNext()) { 
+                str = sc.next(); // файл не пустой??????
+                String regex = "[\\p{C}]"; 
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(str);
+                String cleanStr = matcher.replaceAll("");
+                array.add(cleanStr);
+            }
+            if (sc != null) {
+                sc.close();
+            }
         }
       
         Sorter sorter = new Sorter(array);
         sorter.sort();
-        sorter.output(); // удаление старых txt?
-        if (shortStat) { 
-            sorter.shortStat(); // только при наличии команды
-        }
-        if (fullStat) {
+        sorter.output(addData); // TODO удаление старых txt?
+        if (fullStat || (shortStat && fullStat)) {
             sorter.fullStat();
         } 
+        if (shortStat) { 
+            sorter.shortStat(); 
+        }
+        
     }
 
 }

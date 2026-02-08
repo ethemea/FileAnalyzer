@@ -1,14 +1,15 @@
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Sorter {
     private int numberOfStrings;
     private int numberOfIntegers;
     private int numberOfFloats;
-    private int intMin;
-    private int intMax;
-    private int intSum = 0;
+    private Long intMin;
+    private Long intMax;
+    private Long intSum;
     private float floatMin;
     private float floatMax;
     private float floatSum = 0;
@@ -40,7 +41,7 @@ public class Sorter {
             return false;
         }
         try {
-            Integer.parseInt(str);
+            Long.parseLong(str);
         } catch (NumberFormatException nfe) {
             return false;
         }
@@ -51,7 +52,7 @@ public class Sorter {
             if (isInteger(str)) { 
                 arrayOfIntegers.add(str);
                 numberOfIntegers++;
-                Integer intN = Integer.parseInt(str);
+                Long intN = Long.parseLong(str);
                 intSum =+ intN;
                 if (numberOfIntegers == 1) {
                     intMax = intN;
@@ -68,7 +69,7 @@ public class Sorter {
                 arrayOfFloats.add(str);
                 numberOfFloats++;
                 Float floatN = Float.parseFloat(str);
-                floatSum =+ floatN;
+                floatSum += floatN;
                 if (numberOfFloats == 1) {
                     floatMax = floatN;
                     floatMin = floatN;
@@ -98,32 +99,44 @@ public class Sorter {
             }
         }
     }
-    private void write(String filename, ArrayList<String> toWrite) throws IOException {
-        if (toWrite.size() > 0) { // TODO оптимизация?
+    public void output(boolean a) throws IOException { // TODO задать префикс выходных файлов -p + путь -o + дозапись в файлы -a
+        write("integers.txt", arrayOfIntegers, a);
+        write("floats.txt", arrayOfFloats, a);
+        write("strings.txt", arrayOfStrings, a);
+    }
+    private void write(String filename, ArrayList<String> toWrite, boolean a) throws IOException {
+        if (toWrite.size() > 0) {
+            try (FileWriter writer = new FileWriter(filename, a)) {
+                for (String each : toWrite) {
+                    writer.write(each+"\n");
+                }
+                writer.close();
+            }
+            catch(IOException ex) {
+            System.out.println(ex.getMessage());
+            } 
+        }
+        
+        /*if (toWrite.size() > 0) { 
             PrintWriter writer = new PrintWriter(filename, "UTF-8");
             for (String each : toWrite) {
                 writer.println(each);
             }
             writer.close();
-        }
-    }
-    public void output() throws IOException {
-        write("integers.txt", arrayOfIntegers);
-        write("floats.txt", arrayOfFloats);
-        write("strings.txt", arrayOfStrings);
+        }*/
     }
     public void shortStat() {
         if (numberOfIntegers > 0) {
             System.out.println("Number of integers: " + numberOfIntegers);
         }
         if (numberOfFloats > 0) {
-            System.out.println("Number of real: " + numberOfFloats);
+            System.out.println("Number of floats: " + numberOfFloats);
         }
         if (numberOfStrings > 0) {
             System.out.println("Number of strings: " + numberOfStrings);
         }
     }
-    public void fullStat() {// TODO 
+    public void fullStat() { // навести красоту
         if (numberOfIntegers > 0) {
             System.out.println("INTEGERS\nNumber of integers: " + numberOfIntegers);
             System.out.println("Average of integers: " + intSum/numberOfIntegers);
