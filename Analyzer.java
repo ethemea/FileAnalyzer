@@ -12,15 +12,18 @@ public class Analyzer {
         boolean fullStat = false;
         boolean addData = false;
         ArrayList<String> array = new ArrayList<String>();
+        String path = null;
+        String filename = null;
 
         ArrayList<String> files = new ArrayList<String>();
-        for (String each : args) {
-            if (each.endsWith(".txt")) {
-                File f = new File(each);
+        int len = args.length;
+        for (int i = 0; i < len; i++) {
+            if (args[i].endsWith(".txt")) {
+                File f = new File(args[i]);
                 if(f.exists() && !f.isDirectory()) { 
-                    files.add(each);
+                    files.add(args[i]);
                 }
-            } else switch (each) {
+            } else switch (args[i]) {
                 case "-s":
                     shortStat = true;
                     break;
@@ -29,6 +32,23 @@ public class Analyzer {
                     break;
                 case "-a":
                     addData = true;
+                    break;
+                case "-p":
+                    if (i + 1 < len) {
+                        if (!(args[i+1].endsWith(".txt"))) {
+                            filename = args[i+1];
+                            i++;
+                        }
+                    }
+                    break;
+                case "-o":
+                    if (i + 1 < len) {
+                        if (!(args[i+1].endsWith(".txt"))) {
+                            path = args[i+1];
+                            i++;
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -52,7 +72,7 @@ public class Analyzer {
       
         Sorter sorter = new Sorter(array);
         sorter.sort();
-        sorter.output(addData); // TODO удаление старых txt?
+        sorter.output(addData, path, filename);
         if (fullStat || (shortStat && fullStat)) {
             sorter.fullStat();
         } 
