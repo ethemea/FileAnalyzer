@@ -1,5 +1,8 @@
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 //import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -101,9 +104,22 @@ public class Sorter {
             }
         }
     }
-    public void output(boolean a, String path, String name) throws IOException { // TODO задать путь -o
+    private boolean pathCheck (String path) {
+        try {
+        Paths.get(path);
+        } catch (InvalidPathException | NullPointerException ex) {
+            return false;
+        }
+        return true;
+    }
+    public void output(boolean a, String path, String name) throws IOException { 
         if (name == null) {
             name = "";
+        }
+        if (pathCheck(path)) {
+            // TODO задать путь -o
+            File theDir = new File(path);
+            theDir.mkdirs();
         }
         write(name + "integers.txt", arrayOfIntegers, a);
         write(name + "floats.txt", arrayOfFloats, a);
