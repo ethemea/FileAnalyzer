@@ -22,6 +22,7 @@ public class Sorter {
     private ArrayList<String> arrayOfStrings = new ArrayList<>();
     private ArrayList<String> arrayOfIntegers = new ArrayList<>();
     private ArrayList<String> arrayOfFloats = new ArrayList<>();
+    private String[] = {};
     public Sorter(ArrayList<String> array) {
         this.numberOfStrings = 0;
         this.numberOfIntegers = 0;
@@ -112,22 +113,43 @@ public class Sorter {
         }
         return true;
     }
-    public void output(boolean a, String path, String name) throws IOException { 
+    private String nameCheck (String name) {
         if (name == null) {
-            name = "";
+            return "";
         }
+        return name;
+    }
+    private File createFile(File theDir, String name) {
+        File file;
+        if (theDir != null) {
+            file = new File(theDir + "\\" + name);
+        } else {
+            file = new File(name);
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+    public void output(boolean a, String path, String name) throws IOException { // TODO задать путь -o
+        name = nameCheck(name); // TODO сделать нормальный неймчек 
         if (pathCheck(path)) {
-            // TODO задать путь -o
             File theDir = new File(path);
             theDir.mkdirs();
+            write(createFile(theDir, name + "integers.txt"), arrayOfIntegers, a);
+            write(createFile(theDir, name + "floats.txt"), arrayOfFloats, a);
+            write(createFile(theDir, name + "strings.txt"), arrayOfStrings, a);
+        } else {
+            write(createFile(null, name + "integers.txt"), arrayOfIntegers, a);
+            write(createFile(null, name + "floats.txt"), arrayOfFloats, a);
+            write(createFile(null, name + "strings.txt"), arrayOfStrings, a);
         }
-        write(name + "integers.txt", arrayOfIntegers, a);
-        write(name + "floats.txt", arrayOfFloats, a);
-        write(name + "strings.txt", arrayOfStrings, a);
     }
-    private void write(String filename, ArrayList<String> toWrite, boolean a) throws IOException {
+    private void write(File file, ArrayList<String> toWrite, boolean a) throws IOException {
         if (toWrite.size() > 0) {
-            try (FileWriter writer = new FileWriter(filename, a)) {
+            try (FileWriter writer = new FileWriter(file, a)) {
                 for (String each : toWrite) {
                     writer.write(each + "\n");
                 }
