@@ -1,11 +1,8 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-//import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Sorter {
@@ -24,6 +21,7 @@ public class Sorter {
     private ArrayList<String> arrayOfStrings = new ArrayList<>();
     private ArrayList<String> arrayOfIntegers = new ArrayList<>();
     private ArrayList<String> arrayOfFloats = new ArrayList<>();
+    private static final String[] illegalChars = { "/", "\n", "\r", "\t", "\0", "\f", "`", "?", "\\*", "\\", "<", ">", "|", "\"", ":" };
     public Sorter(ArrayList<String> array) {
         this.numberOfStrings = 0;
         this.numberOfIntegers = 0;
@@ -117,6 +115,13 @@ public class Sorter {
     private String nameCheck (String name) {// TODO сделать нормальный неймчек 
         if (name == null) {
             return "";
+        } else {
+            for (String ch : illegalChars) {
+                if (name.contains(ch)) {
+                    System.out.println("hi bitch: " + сh);
+                    name = name.replaceAll(ch.toString(), "");
+                }
+            }
         }
         return name;
     }
@@ -144,17 +149,6 @@ public class Sorter {
             } catch (Exception ex) {
                 System.err.println("Failed to create directories: " + ex.getMessage());
             }
-            //System.out.println(theDir.getParentFile().mkdirs());
-            // dir = Paths.get("mydir");
-            //Files.createDirectory(dir);
-            //Files.createDirectory(theDir.toPath());
-            //try {
-                //Path pathP = Paths.get(path);
-                //Files.createDirectories(pathP);
-                //System.out.println("Nested directories created: " + path);
-            //} catch (IOException e) {
-             //   System.err.println("Failed to create directories: " + e.getMessage());
-            //}
             write(createFile(theDir, name + "integers.txt"), arrayOfIntegers, a);
             write(createFile(theDir, name + "floats.txt"), arrayOfFloats, a);
             write(createFile(theDir, name + "strings.txt"), arrayOfStrings, a);
@@ -194,19 +188,19 @@ public class Sorter {
             System.out.println("Average of integers: " + intSum/numberOfIntegers);
             System.out.println("Summary of integers: " + intSum);
             System.out.println("Min of integers: " + intMin);
-            System.out.println("Maximum of integers: " + intMax);
+            System.out.println("Max of integers: " + intMax);
         }
         if (numberOfFloats > 0) {
             System.out.println("FLOATS\nNumber of floats: " + numberOfFloats);
             System.out.println("Average of floats: " + floatSum/numberOfFloats);
             System.out.println("Summary of floats: " + floatSum);
             System.out.println("Min of floats: " + floatMin);
-            System.out.println("Maximum of floats: " + floatMax);
+            System.out.println("Max of floats: " + floatMax);
         }
         if (numberOfStrings > 0) {
             System.out.println("STRINGS\nNumber of strings: " + numberOfStrings);
-            System.out.println("Minimum length of strings: " + strMin);
-            System.out.println("Maximum length of strings: " + strMax);
+            System.out.println("Min length of strings: " + strMin);
+            System.out.println("Max length of strings: " + strMax);
         }
     }
 }
