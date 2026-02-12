@@ -1,7 +1,9 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 //import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -22,7 +24,6 @@ public class Sorter {
     private ArrayList<String> arrayOfStrings = new ArrayList<>();
     private ArrayList<String> arrayOfIntegers = new ArrayList<>();
     private ArrayList<String> arrayOfFloats = new ArrayList<>();
-    private String[] = {};
     public Sorter(ArrayList<String> array) {
         this.numberOfStrings = 0;
         this.numberOfIntegers = 0;
@@ -113,7 +114,7 @@ public class Sorter {
         }
         return true;
     }
-    private String nameCheck (String name) {
+    private String nameCheck (String name) {// TODO сделать нормальный неймчек 
         if (name == null) {
             return "";
         }
@@ -128,16 +129,32 @@ public class Sorter {
         }
         try {
             file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            System.err.println("Failed to create file " + name + ": " + ex.getMessage());
         }
         return file;
     }
-    public void output(boolean a, String path, String name) throws IOException { // TODO задать путь -o
-        name = nameCheck(name); // TODO сделать нормальный неймчек 
+    public void output(boolean a, String path, String name) throws IOException {
+        name = nameCheck(name); 
         if (pathCheck(path)) {
-            File theDir = new File(path);
-            theDir.mkdirs();
+            String absolutePath = Paths.get("").toAbsolutePath().toString();
+            File theDir = new File(absolutePath + path);
+            try {
+                theDir.mkdirs();
+            } catch (Exception ex) {
+                System.err.println("Failed to create directories: " + ex.getMessage());
+            }
+            //System.out.println(theDir.getParentFile().mkdirs());
+            // dir = Paths.get("mydir");
+            //Files.createDirectory(dir);
+            //Files.createDirectory(theDir.toPath());
+            //try {
+                //Path pathP = Paths.get(path);
+                //Files.createDirectories(pathP);
+                //System.out.println("Nested directories created: " + path);
+            //} catch (IOException e) {
+             //   System.err.println("Failed to create directories: " + e.getMessage());
+            //}
             write(createFile(theDir, name + "integers.txt"), arrayOfIntegers, a);
             write(createFile(theDir, name + "floats.txt"), arrayOfFloats, a);
             write(createFile(theDir, name + "strings.txt"), arrayOfStrings, a);
