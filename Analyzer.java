@@ -58,7 +58,7 @@ public class Analyzer {
             Scanner sc = new Scanner(new FileReader(filePath)).useDelimiter("\n"); // TODO перенос в класс Sorter ??
             String str;
             while (sc.hasNext()) { 
-                str = sc.next(); // TODO файл не пустой??????
+                str = sc.next(); 
                 String regex = "[\\p{C}]"; 
                 Pattern pattern = Pattern.compile(regex);
                 Matcher matcher = pattern.matcher(str);

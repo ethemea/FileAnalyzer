@@ -21,7 +21,7 @@ public class Sorter {
     private ArrayList<String> arrayOfStrings = new ArrayList<>();
     private ArrayList<String> arrayOfIntegers = new ArrayList<>();
     private ArrayList<String> arrayOfFloats = new ArrayList<>();
-    private static final String[] illegalChars = { "/", "\n", "\r", "\t", "\0", "\f", "`", "?", "\\*", "\\", "<", ">", "|", "\"", ":" };
+    private static final String[] illegalChars = { "/", "\n", "\r", "\t", "\0", "\f", "`", "\\?", "\\*", "\\\\", "<", ">", "|", "\"", ":" };
     public Sorter(ArrayList<String> array) {
         this.numberOfStrings = 0;
         this.numberOfIntegers = 0;
@@ -112,15 +112,12 @@ public class Sorter {
         }
         return true;
     }
-    private String nameCheck (String name) {// TODO сделать нормальный неймчек 
+    private String nameCheck (String name) {
         if (name == null) {
             return "";
         } else {
             for (String ch : illegalChars) {
-                if (name.contains(ch)) {
-                    System.out.println("hi bitch: " + ch); // TODO убрать потом
-                    name = name.replaceAll(ch.toString(), "");
-                }
+                name = name.replaceAll(ch.toString(), "");
             }
         }
         return name;
