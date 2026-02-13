@@ -118,7 +118,7 @@ public class Sorter {
         } else {
             for (String ch : illegalChars) {
                 if (name.contains(ch)) {
-                    System.out.println("hi bitch: " + сh);
+                    System.out.println("hi bitch: " + ch); // TODO убрать потом
                     name = name.replaceAll(ch.toString(), "");
                 }
             }
@@ -128,7 +128,7 @@ public class Sorter {
     private File createFile(File theDir, String name) {
         File file;
         if (theDir != null) {
-            file = new File(theDir + "\\" + name);
+            file = new File(theDir, name);
         } else {
             file = new File(name);
         }
