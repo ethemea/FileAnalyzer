@@ -250,7 +250,7 @@ public class Sorter {
 
     public void output() throws IOException {
         filename = nameCheck(filename); 
-        if (pathCheck()) {
+        if ((path != null) && pathCheck()) {
             String absolutePath = Paths.get("").toAbsolutePath().toString();
             File theDir = new File(absolutePath, path);
             try {
