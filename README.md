@@ -27,7 +27,7 @@
 
 Фильтрация и вывод из файлов in1.txt, in2.txt с дозаписью в выходные файлы и выводом краткой статистики: 
 
-`java -jar Analyzer.jar -а in1.txt in2.txt`
+`java -jar Analyzer.jar -а -s in1.txt in2.txt`
 
 
 Фильтрация и вывод из файлов in1.txt, in2.txt по пути /some/path в файлы с префиксом sample- и выводом полной статистики: 
