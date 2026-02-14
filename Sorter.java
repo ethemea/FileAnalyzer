@@ -83,6 +83,10 @@ public class Sorter {
     }
 
     public void readFiles() {
+        if (files.isEmpty()) {
+            System.out.println("Input files are missing");
+            return;
+        }
         for (String filePath : files) {
             try {
                 Scanner sc = new Scanner(new FileReader(filePath)).useDelimiter("\n");
@@ -99,7 +103,7 @@ public class Sorter {
                     sc.close();
                 }
             } catch (FileNotFoundException ex) {
-                System.out.println("Input files were nor found: " + ex.getMessage());
+                System.out.println("Input files were not found: " + ex.getMessage());
             }
         }
     }
@@ -181,10 +185,26 @@ public class Sorter {
         }
     }
 
-    private boolean pathCheck (String path) {
+    private boolean pathCheck() {
         try {
             Paths.get(path);
         } catch (InvalidPathException | NullPointerException ex) {
+            System.out.println("Path is incorrect: " + ex);
+            return false;
+        }
+        int len = path.length();
+        int dot = 0;
+        int asterisk = 0;
+        for (int i = 0; i < len; i++) {
+            if (path.contains(".")) {
+                dot++;
+            }
+            if (path.contains("*")) {
+                asterisk++;
+            }
+        }
+        if (len == dot || len == asterisk) {
+            System.out.println("Path is incorrect");
             return false;
         }
         return true;
@@ -201,39 +221,50 @@ public class Sorter {
         return name;
     }
 
-    private File createFile(File theDir, String name) {
+    private File createFile(String name) {
+        File file = new File(name);
+        try {
+            file.createNewFile();
+        } catch (IOException ex) {
+            System.err.println("Failed to create file " + file + ": " + ex.getMessage());
+            return null;
+        }
+        return file;
+    }
+
+    private File createFileinDir(File theDir, String name) {
         File file;
         if (theDir != null) {
             file = new File(theDir, name);
         } else {
-            file = new File(name);
+            return createFile(name);
         }
         try {
             file.createNewFile();
         } catch (IOException ex) {
-            System.err.println("Failed to create file " + name + ": " + ex.getMessage());
-            return null;
+            System.err.println("Failed to create file " + file + ": " + ex.getMessage());
+            return createFile(name);
         }
         return file;
     }
 
     public void output() throws IOException {
         filename = nameCheck(filename); 
-        if (pathCheck(path)) {
+        if (pathCheck()) {
             String absolutePath = Paths.get("").toAbsolutePath().toString();
-            File theDir = new File(absolutePath + path);
+            File theDir = new File(absolutePath, path);
             try {
                 theDir.mkdirs();
             } catch (Exception ex) {
                 System.err.println("Failed to create directories: " + ex.getMessage());
             }
-            write(createFile(theDir, filename + "integers.txt"), arrayOfIntegers);
-            write(createFile(theDir, filename + "floats.txt"), arrayOfFloats);
-            write(createFile(theDir, filename + "strings.txt"), arrayOfStrings);
+            write(createFileinDir(theDir, filename + "integers.txt"), arrayOfIntegers);
+            write(createFileinDir(theDir, filename + "floats.txt"), arrayOfFloats);
+            write(createFileinDir(theDir, filename + "strings.txt"), arrayOfStrings);
         } else {
-            write(createFile(null, filename + "integers.txt"), arrayOfIntegers);
-            write(createFile(null, filename + "floats.txt"), arrayOfFloats);
-            write(createFile(null, filename + "strings.txt"), arrayOfStrings);
+            write(createFile(filename + "integers.txt"), arrayOfIntegers);
+            write(createFile(filename + "floats.txt"), arrayOfFloats);
+            write(createFile(filename + "strings.txt"), arrayOfStrings);
         }
         if ((shortStat && fullStat) || fullStat) {
             fullStat();
